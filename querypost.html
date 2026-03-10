@@ -466,18 +466,38 @@ function validate(){
 }
 
 async function finish(){
-  // estä tuplalähetys
   if(submitting) return;
   setSubmitting(true);
 
-  const payload = {
-    campaign:"Rehuarvonta",
-    submittedAt:new Date().toISOString(),
-    ...state
-  };
+  // ✅ NORMALISOI interest stringiksi
+  const interestString = Array.isArray(state.interest)
+    ? state.interest.join(", ")
+    : "";
 
-  // varmistetaan interest aina array
-  if(!Array.isArray(payload.interest)) payload.interest = [];
+  const payload = {
+    campaign: "Rehuarvonta",
+    submittedAt: new Date().toISOString(),
+
+    farmName: state.farmName || "",
+    name: state.name || "",
+    phone: state.phone || "",
+    email: (state.email || "").trim(),
+    postalCode: state.postalCode || "",
+    city: state.city || "",
+    production: state.production || "",
+
+    // ✅ TÄRKEIN KORJAUS
+    interest: interestString,
+
+    // eläinmäärät
+    noLivestock: state.noLivestock === true,
+    countDairy: state.countDairy || "",
+    countBeef: state.countBeef || "",
+    countCows: state.countCows || "",
+    countOther: state.countOther || "",
+
+    notes: state.notes || ""
+  };
 
   try{
     const res = await fetch(POWER_AUTOMATE_URL,{
@@ -486,7 +506,6 @@ async function finish(){
       body: JSON.stringify(payload)
     });
 
-    // ✅ TÄRKEÄ: tarkista status ja näytä oikea virhe
     if(!res.ok){
       const txt = await res.text().catch(()=> "");
       throw new Error(`HTTP ${res.status}\n${txt}`);
@@ -501,9 +520,9 @@ async function finish(){
       </div>`;
   }catch(e){
     setSubmitting(false);
-    // näytä tarkempi virhe (mutta ei liian pitkä)
-    const msg = String(e && e.message ? e.message : e);
-    hint.textContent = "Tallennus epäonnistui. Yritä uudelleen.\n\n" + msg.slice(0, 500);
+    hint.textContent =
+      "Tallennus epäonnistui. Yritä uudelleen.\n\n" +
+      String(e.message || e).slice(0,500);
     render();
   }
 }
