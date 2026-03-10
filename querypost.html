@@ -1,319 +1,276 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osallistu rehuarvontaan</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rehuarvonta</title>
 
 <style>
-:root{
-  --bg:#f5f7fa;
-  --card:#ffffff;
-  --text:#111;
-  --muted:#555;
-  --brand:#038C3E;
-  --btn:#0078d4;
-  --border:#dcdcdc;
-  --danger:#b00020;
+:root {
+  --brand: #038c3e;
+  --primary: #0078d4;
+  --border: #dcdcdc;
 }
 
-html,body{
-  margin:0;
-  background:var(--bg);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--text);
+body {
+  margin: 0;
+  background: #f4f6f8;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-.wrap{ max-width:760px; margin:0 auto; padding:24px 18px; }
-
-.card{
-  background:var(--card);
-  border-radius:24px;
-  padding:22px 22px 26px;
-  box-shadow:0 12px 32px rgba(0,0,0,.12);
+.wrap {
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 28px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
 }
 
-h1{ font-size:30px; margin:0 0 8px; }
-.desc{
-  font-size:16px;
-  color:var(--muted);
-  margin-bottom:18px;
-  line-height:1.45;
+h1 {
+  margin-top: 0;
 }
 
-.progress{
-  height:10px;
-  background:#e6e6e6;
-  border-radius:999px;
-  overflow:hidden;
-  margin:18px 0 22px;
-}
-.progress > div{ height:100%; width:0%; background:var(--brand); }
-
-.step-title{ font-size:22px; font-weight:800; margin-bottom:16px; }
-#stepHost{ min-height:260px; }
-
-input, select, textarea{
-  width:100%;
-  padding:16px 18px;
-  font-size:20px;
-  border-radius:16px;
-  border:1px solid var(--border);
-  box-sizing:border-box;
+label {
+  display: block;
+  margin-top: 18px;
+  font-weight: 700;
 }
 
-textarea{ min-height:120px; }
-
-.hint{
-  margin-top:10px;
-  font-size:14px;
-  color:var(--danger);
-  min-height:18px;
+input, select, textarea {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
-.pills{
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-.pill{
-  padding:16px 26px;
-  font-size:20px;
-  font-weight:800;
-  border-radius:999px;
-  border:2px solid var(--brand);
-  background:#fff;
-  color:var(--brand);
-  cursor:pointer;
-}
-.pill.active{
-  background:var(--brand);
-  color:#fff;
+textarea {
+  min-height: 100px;
 }
 
-.actions{
-  display:flex;
-  gap:14px;
-  margin-top:26px;
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
 }
-button.nav{
-  flex:1;
-  min-height:60px;
-  font-size:20px;
-  font-weight:800;
-  border-radius:999px;
-  border:0;
-  background:var(--btn);
-  color:#fff;
+
+.pill {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 2px solid var(--brand);
+  background: #fff;
+  color: var(--brand);
+  font-weight: 800;
+  cursor: pointer;
 }
-button.secondary{
-  background:#cfd6dd;
-  color:#111;
+
+.pill.active {
+  background: var(--brand);
+  color: #fff;
+}
+
+button.submit {
+  margin-top: 28px;
+  width: 100%;
+  padding: 16px;
+  font-size: 20px;
+  font-weight: 900;
+  border-radius: 999px;
+  border: 0;
+  background: var(--primary);
+  color: #fff;
+  position: relative;
+}
+
+button.submit.loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+button.submit.loading::after {
+  content: "";
+  width: 22px;
+  height: 22px;
+  border: 3px solid #ffffff80;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.hint {
+  margin-top: 14px;
+  color: #b00020;
+  font-weight: 600;
 }
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <div class="card">
+  <h1>Osallistu rehuarvontaan</h1>
 
-    <h1>Osallistu rehuarvontaan</h1>
-    <div class="desc">
-      Täytä yhteystiedot ja kerro lyhyesti tilastasi – osallistut samalla arvontaan.
-    </div>
+  <label>Nimi *</label>
+  <input id="name" />
 
-    <div class="progress"><div id="bar"></div></div>
-    <div id="stepHost"></div>
+  <label>Puhelin *</label>
+  <input id="phone" inputmode="tel" />
 
-    <div class="actions">
-      <button id="backBtn" class="nav secondary" type="button">Takaisin</button>
-      <button id="nextBtn" class="nav" type="button">Seuraava</button>
-    </div>
+  <label>Tuotantosuunta *</label>
+  <select id="production">
+    <option value="">— valitse —</option>
+    <option>Lypsykarjatila</option>
+    <option>Lihakarjatila</option>
+    <option>Emolehmätila</option>
+    <option>Muu</option>
+  </select>
 
-    <div id="hint" class="hint"></div>
+  <label id="animalLabel">Eläinmäärä *</label>
+  <input id="animalCount" type="number" />
 
-  </div>
+  <label>Kiinnostunut *</label>
+  <div class="pills" id="interestPills"></div>
+
+  <label>Lisätiedot</label>
+  <textarea id="notes"></textarea>
+
+  <button class="submit" id="submitBtn" type="button">
+    Lähetä
+  </button>
+
+  <div class="hint" id="hint"></div>
 </div>
 
 <script>
-const POWER_AUTOMATE_URL = "https://defaultd454dc7d3d94429488602365011a91.37.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/bb280f859478467b9baa9e59cd87dbb1/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1hDaYD8pEqbzQe5t8cMC5a_6qCMt10QTFG-d-PPnHE8";
+/* ================== ASETUKSET ================== */
 
-const STEPS = [
-  { key:"farmName", type:"text", title:"Yrityksen / tilan nimi", required:false },
-  { key:"name", type:"text", title:"Etu- ja sukunimi", required:true },
-  { key:"phone", type:"text", title:"Puhelinnumero", required:true },
-  { key:"email", type:"email", title:"Sähköposti (valinnainen)", required:false },
-  { key:"postalCode", type:"text", title:"Postinumero", required:true },
-  { key:"city", type:"text", title:"Postitoimipaikka", required:true },
+const POWER_AUTOMATE_URL =
+  "PASTE_YOUR_POWER_AUTOMATE_URL_HERE";
 
-  { key:"production", type:"select", title:"Tuotantosuunta", required:true,
-    options:["Lypsykarjatila","Lihakarjatila","Emolehmätila","Muu"]
-  },
+const API_KEY = "rehuarvonta-2026";
 
-  { key:"animalCount", type:"animals", title:"Eläinmäärä", required:true },
+/* ================== STATE ================== */
 
-  { key:"interest", type:"multi", title:"Kiinnostunut", required:true,
-    options:["Ruokintasuunnitelma","Tilakäynti","Rehutarjous","Muu"]
-  },
+let isSubmitting = false;
+let selectedInterests = [];
 
-  { key:"notes", type:"textarea", title:"Lisätiedot (valinnainen)", required:false }
+/* ================== INTEREST PILLS ================== */
+
+const interests = [
+  "Ruokintasuunnitelma",
+  "Tilakäynti",
+  "Rehutarjous",
+  "Muu"
 ];
 
-let idx = 0;
-let state = { interest: [] };
+const pillsHost = document.getElementById("interestPills");
 
-const host = document.getElementById("stepHost");
-const backBtn = document.getElementById("backBtn");
-const nextBtn = document.getElementById("nextBtn");
-const bar = document.getElementById("bar");
-const hint = document.getElementById("hint");
+interests.forEach(text => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "pill";
+  b.textContent = text;
+  b.onclick = () => {
+    b.classList.toggle("active");
+    if (selectedInterests.includes(text)) {
+      selectedInterests = selectedInterests.filter(x => x !== text);
+    } else {
+      selectedInterests.push(text);
+    }
+  };
+  pillsHost.appendChild(b);
+});
 
-function render(){
-  const step = STEPS[idx];
-  bar.style.width = Math.round((idx+1)/STEPS.length*100) + "%";
-  backBtn.style.display = idx===0 ? "none" : "block";
-  nextBtn.textContent = idx===STEPS.length-1 ? "Valmis" : "Seuraava";
+/* ================== ELÄINLABEL ================== */
+
+const animalLabel = document.getElementById("animalLabel");
+
+document.getElementById("production").addEventListener("change", e => {
+  const map = {
+    "Lypsykarjatila": "Lypsävien määrä",
+    "Lihakarjatila": "Lihakarjan määrä",
+    "Emolehmätila": "Emolehmien määrä",
+    "Muu": "Eläinten määrä"
+  };
+  animalLabel.textContent = (map[e.target.value] || "Eläinmäärä") + " *";
+});
+
+/* ================== SUBMIT ================== */
+
+document.getElementById("submitBtn").addEventListener("click", submitForm);
+
+async function submitForm() {
+  if (isSubmitting) return;
+
+  const hint = document.getElementById("hint");
   hint.textContent = "";
-  host.innerHTML = "";
 
-  const title = document.createElement("div");
-  title.className = "step-title";
-  title.textContent = step.title;
-  host.appendChild(title);
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const production = document.getElementById("production").value;
+  const count = document.getElementById("animalCount").value;
+  const notes = document.getElementById("notes").value;
 
-  if(step.type==="animals"){
-    const labelMap = {
-      "Lypsykarjatila": "Lypsävien määrä",
-      "Lihakarjatila": "Lihakarjan määrä",
-      "Emolehmätila": "Emolehmien määrä",
-      "Muu": "Eläinten määrä"
-    };
-
-    const keyMap = {
-      "Lypsykarjatila": "countDairy",
-      "Lihakarjatila": "countBeef",
-      "Emolehmätila": "countCows",
-      "Muu": "countOther"
-    };
-
-    const prod = state.production;
-    const fieldKey = keyMap[prod];
-
-    const input = document.createElement("input");
-    input.type = "number";
-    input.placeholder = labelMap[prod] || "Eläinmäärä";
-    input.value = state[fieldKey] || "";
-    input.oninput = () => state[fieldKey] = input.value;
-
-    host.appendChild(input);
+  if (!name || !phone || !production || !count || selectedInterests.length === 0) {
+    hint.textContent = "Täytä kaikki pakolliset kentät.";
     return;
   }
 
-  let el;
-  if(step.type==="text" || step.type==="email"){
-    el = document.createElement("input");
-    el.type = step.type;
-    el.value = state[step.key] || "";
-    el.oninput = () => state[step.key] = el.value;
-    host.appendChild(el);
-  }
+  isSubmitting = true;
+  const btn = document.getElementById("submitBtn");
+  btn.classList.add("loading");
+  btn.textContent = "Lähetetään…";
 
-  if(step.type==="select"){
-    el = document.createElement("select");
-    el.innerHTML = '<option value="">— valitse —</option>' +
-      step.options.map(o=>`<option>${o}</option>`).join("");
-    el.value = state[step.key] || "";
-    el.onchange = ()=>{
-      state[step.key] = el.value;
-      delete state.countDairy;
-      delete state.countBeef;
-      delete state.countCows;
-      delete state.countOther;
-    };
-    host.appendChild(el);
-  }
+  const payload = {
+    campaign: "Rehuarvonta",
+    submittedAt: new Date().toISOString(),
+    name,
+    phone,
+    production,
+    interests: selectedInterests,
+    notes
+  };
 
-  if(step.type==="multi"){
-    el = document.createElement("div");
-    el.className = "pills";
-    step.options.forEach(v=>{
-      const b = document.createElement("button");
-      b.type="button";
-      b.className="pill"+(state.interest.includes(v)?" active":"");
-      b.textContent=v;
-      b.onclick=()=>{
-        state.interest = state.interest.includes(v)
-          ? state.interest.filter(x=>x!==v)
-          : [...state.interest, v];
-        render();
-      };
-      el.appendChild(b);
+  payload[
+    production === "Lypsykarjatila" ? "countDairy" :
+    production === "Lihakarjatila" ? "countBeef" :
+    production === "Emolehmätila" ? "countCows" :
+    "countOther"
+  ] = count;
+
+  try {
+    const res = await fetch(POWER_AUTOMATE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": API_KEY
+      },
+      body: JSON.stringify(payload)
     });
-    host.appendChild(el);
-  }
 
-  if(step.type==="textarea"){
-    el = document.createElement("textarea");
-    el.value = state[step.key] || "";
-    el.oninput = ()=> state[step.key] = el.value;
-    host.appendChild(el);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    document.querySelector(".wrap").innerHTML =
+      "<h1>Kiitos! ✅</h1><p>Osallistumisesi on vastaanotettu.</p>";
+
+  } catch (err) {
+    console.error(err);
+    isSubmitting = false;
+    btn.classList.remove("loading");
+    btn.textContent = "Lähetä";
+    hint.textContent = "Lähetys epäonnistui. Yritä uudelleen.";
   }
 }
-
-function validate(){
-  const step = STEPS[idx];
-
-  if(step.type==="animals"){
-    const values = ["countDairy","countBeef","countCows","countOther"];
-    const filled = values.some(k => state[k]);
-    if(!filled){
-      hint.textContent = "Syötä eläinmäärä.";
-      return false;
-    }
-    return true;
-  }
-
-  if(step.required){
-    const v = state[step.key];
-    if(!v || (Array.isArray(v)&&v.length===0)){
-      hint.textContent = "Täytä tämä kenttä.";
-      return false;
-    }
-  }
-  return true;
-}
-
-async function finish(){
-  await fetch(POWER_AUTOMATE_URL,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      campaign:"Rehuarvonta",
-      submittedAt:new Date().toISOString(),
-      ...state
-    })
-  });
-
-  document.body.innerHTML = `
-    <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center">
-      <div>
-        <div style="font-size:36px;font-weight:900;color:#038C3E">Kiitos! ✅</div>
-        <p>Osallistumisesi on tallennettu.</p>
-      </div>
-    </div>`;
-}
-
-backBtn.onclick = ()=>{ idx--; render(); };
-nextBtn.onclick = async ()=>{
-  if(!validate()) return;
-  if(idx===STEPS.length-1){
-    try{ await finish(); }catch(e){ hint.textContent="Tallennus epäonnistui."; }
-  }else{
-    idx++; render();
-  }
-};
-
-render();
 </script>
 </body>
 </html>
+``
