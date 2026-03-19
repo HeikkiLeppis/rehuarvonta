@@ -336,6 +336,7 @@ button.secondary{
 <script>
 const PUSH_CLOUD_URL  = "https://defaultd454dc7d3d94429488602365011a91.37.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95b546a295fc4c22b535248cb84d818b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cA97TJtRIIVR9SiAsexW9G3tW7RJjeBwbk4MmP2Q0HY";
 const FETCH_ACTIVE_EVENT_URL = "https://defaultd454dc7d3d94429488602365011a91.37.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5bc1bf8dc7c14346b79f02eed6d760f0/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=jWHVaFplYVZ90inDomT5pPyn_GmKqCB9TbL6JctotTI";
+const AFTER_SUBMIT_URL = "https://kinnusentahtirehut.fi/";
 
 /* ========= POSTINUMERO -> POSTITOIMIPAIKKA =========
    postinumerot.json on palvelimen juuressa.
@@ -473,6 +474,18 @@ function normalizePhone(v){
   if(cleaned.startsWith("+358") || cleaned.startsWith("0")) return cleaned;
   if(cleaned.startsWith("+")) return cleaned;
   return "0" + cleaned;
+}
+
+function closeWindowOrRedirect(){
+  try{
+    window.open("", "_self");
+    window.close();
+  }catch(_){}
+  setTimeout(()=>{
+    try{
+      window.location.href = AFTER_SUBMIT_URL;
+    }catch(_){}
+  }, 150);
 }
 
 async function fetchActiveEventInfo(){
@@ -920,11 +933,13 @@ async function finish(){
           Kiitos! &#x2705;
         </div>
         <p style="font-size:18px;color:#333;margin-top:10px">Osallistumisesi on tallennettu.</p>
+        <p style="font-size:14px;color:#6b7280;margin-top:6px">Ikkuna suljetaan tai ohjataan takaisin sivustolle.</p>
         <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:18px">
-          <button class="nav secondary" type="button" onclick="location.href='QueryPost.html'">Seuraava osallistuja</button>
+          <button class="nav secondary" type="button" onclick="closeWindowOrRedirect()">Sulje / palaa sivustolle</button>
         </div>
       </div>
     </div>`;
+  setTimeout(closeWindowOrRedirect, 1800);
 }
 
 backBtn.onclick = ()=>{ if(submitting) return; idx--; render(); };
