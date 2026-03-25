@@ -21,7 +21,7 @@ function fixFinnishMojibake(s){
     .replaceAll("Ã©","é");
 }
 
-if(window.POSTAL_DATA && typeof window.POSTAL_DATA === "object"){
+if(location.protocol === "file:" && window.POSTAL_DATA && typeof window.POSTAL_DATA === "object"){
   POSTAL_MAP = window.POSTAL_DATA;
   POSTAL_READY = true;
 }else{
